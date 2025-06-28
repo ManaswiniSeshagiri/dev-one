@@ -2,7 +2,7 @@ Started by user Manaswini P S G
 Running as SYSTEM
 Building in workspace /var/lib/jenkins/workspace/proj
 The recommended git tool is: NONE
-using credential b571a1fa-c73a-4945-92e7-d77ffff20952
+using credential f1bf8c89-3bbd-456e-9222-11a36fe34ebf
  > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/proj/.git # timeout=10
 Fetching changes from the remote Git repository
  > git config remote.origin.url https://github.com/ManaswiniSeshagiri/proj.git # timeout=10
@@ -12,14 +12,14 @@ Fetching upstream changes from https://github.com/ManaswiniSeshagiri/proj.git
 using GIT_ASKPASS to set credentials 
  > git fetch --tags --force --progress -- https://github.com/ManaswiniSeshagiri/proj.git +refs/heads/*:refs/remotes/origin/* # timeout=10
  > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
-Checking out Revision b78f216b1a36d8e8e45b41412c90966d9b12c704 (refs/remotes/origin/main)
+Checking out Revision a3866bbc8ce46e4d39eac7e51061a4b661526ec1 (refs/remotes/origin/main)
  > git config core.sparsecheckout # timeout=10
- > git checkout -f b78f216b1a36d8e8e45b41412c90966d9b12c704 # timeout=10
+ > git checkout -f a3866bbc8ce46e4d39eac7e51061a4b661526ec1 # timeout=10
 Commit message: "Update index.jsp"
- > git rev-list --no-walk b78f216b1a36d8e8e45b41412c90966d9b12c704 # timeout=10
+ > git rev-list --no-walk a3866bbc8ce46e4d39eac7e51061a4b661526ec1 # timeout=10
 Parsing POMs
-Established TCP socket on 36191
-[proj] $ /usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/java -cp /var/lib/jenkins/plugins/maven-plugin/WEB-INF/lib/maven35-agent-1.14.jar:/usr/share/maven/boot/plexus-classworlds-2.6.0.jar:/usr/share/maven/conf/logging jenkins.maven3.agent.Maven35Main /usr/share/maven /var/cache/jenkins/war/WEB-INF/lib/remoting-3301.v4363ddcca_4e7.jar /var/lib/jenkins/plugins/maven-plugin/WEB-INF/lib/maven35-interceptor-1.14.jar /var/lib/jenkins/plugins/maven-plugin/WEB-INF/lib/maven3-interceptor-commons-1.14.jar 36191
+Established TCP socket on 35011
+[proj] $ /usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/java -cp /var/lib/jenkins/plugins/maven-plugin/WEB-INF/lib/maven35-agent-1.14.jar:/usr/share/maven/boot/plexus-classworlds-2.6.0.jar:/usr/share/maven/conf/logging jenkins.maven3.agent.Maven35Main /usr/share/maven /var/cache/jenkins/war/WEB-INF/lib/remoting-3301.v4363ddcca_4e7.jar /var/lib/jenkins/plugins/maven-plugin/WEB-INF/lib/maven35-interceptor-1.14.jar /var/lib/jenkins/plugins/maven-plugin/WEB-INF/lib/maven3-interceptor-commons-1.14.jar 35011
 <===[JENKINS REMOTING CAPACITY]===>channel started
 Executing Maven:  -B -f /var/lib/jenkins/workspace/proj/pom.xml install
 [INFO] Scanning for projects...
@@ -79,7 +79,7 @@ Executing Maven:  -B -f /var/lib/jenkins/workspace/proj/pom.xml install
  T E S T S
 -------------------------------------------------------
 Running com.example.TestGreeter
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 sec
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 sec
 
 Results :
 
@@ -140,15 +140,16 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
 [INFO] ------------------------------------------------------------------------
 [INFO] Reactor Summary for Maven Project 1.0-SNAPSHOT:
 [INFO] 
-[INFO] Maven Project ...................................... SUCCESS [  0.525 s]
-[INFO] Server ............................................. SUCCESS [  2.379 s]
-[INFO] Webapp ............................................. SUCCESS [  1.032 s]
+[INFO] Maven Project ...................................... SUCCESS [  0.535 s]
+[INFO] Server ............................................. SUCCESS [  2.242 s]
+[INFO] Webapp ............................................. SUCCESS [  0.985 s]
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.209 s
-[INFO] Finished at: 2025-06-28T05:02:28Z
+[INFO] Total time:  5.969 s
+[INFO] Finished at: 2025-06-28T08:53:42Z
 [INFO] ------------------------------------------------------------------------
+Waiting for Jenkins to finish collecting data
 [JENKINS] Archiving /var/lib/jenkins/workspace/proj/webapp/pom.xml to com.example.maven-project/webapp/1.0-SNAPSHOT/webapp-1.0-SNAPSHOT.pom
 [JENKINS] Archiving /var/lib/jenkins/workspace/proj/webapp/target/webapp.war to com.example.maven-project/webapp/1.0-SNAPSHOT/webapp-1.0-SNAPSHOT.war
 [JENKINS] Archiving /var/lib/jenkins/workspace/proj/server/pom.xml to com.example.maven-project/server/1.0-SNAPSHOT/server-1.0-SNAPSHOT.pom
@@ -160,8 +161,15 @@ channel stopped
   Redeploying [/var/lib/jenkins/workspace/proj/webapp/target/webapp.war]
   Undeploying [/var/lib/jenkins/workspace/proj/webapp/target/webapp.war]
   Deploying [/var/lib/jenkins/workspace/proj/webapp/target/webapp.war]
-SSH: Connecting from host [jenkins-server.example.com]
+SSH: Connecting from host [jenkins.example.com]
 SSH: Connecting with configuration [jenkins] ...
-ERROR: Exception when publishing, exception message [Failed to connect and initialize SSH connection. Message: [Failed to connect session for config [jenkins]. Message [Auth fail for methods 'publickey,gssapi-keyex,gssapi-with-mic,password']]]
+SSH: EXEC: completed after 802 ms
+SSH: Disconnecting configuration [jenkins] ...
+SSH: Transferred 0 file(s)
+SSH: Connecting from host [jenkins.example.com]
+SSH: Connecting with configuration [docker] ...
+SSH: EXEC: completed after 1,201 ms
+SSH: Disconnecting configuration [docker] ...
+ERROR: Exception when publishing, exception message [Exec exit status not zero. Status [1]]
 Build step 'Send build artifacts over SSH' changed build result to UNSTABLE
 Finished: UNSTABLE
