@@ -1,0 +1,242 @@
+Here's a complete breakdown and explanation of the CI/CD workflow shown in the image using GitHub, Jenkins, Maven, Docker, Tomcat, Amazon ECR, Kubernetes (EKS) — with the purpose of each tool and how they interact:
+
+
+---
+
+🔄 CI/CD Workflow Explanation
+
+🧑‍💻 1. Developer Machine
+
+Role: Where code is written and maintained.
+
+Activity:
+
+Code is developed using an IDE.
+
+Developer uses Git commands to add, commit, and push code to GitHub.
+
+Uses SSH key authentication for secure GitHub communication.
+
+
+
+
+---
+
+🌍 2. GitHub (GitHub Server)
+
+Tool Type: Remote Distributed Version Control System (DVCS)
+
+Purpose: Stores code repositories remotely; triggers builds.
+
+Workflow Role:
+
+When the developer pushes code, a webhook triggers Jenkins automatically.
+
+Jenkins pulls the latest code from GitHub repository for building.
+
+
+
+
+---
+
+🔧 3. Jenkins (CI Server)
+
+Tool Type: Continuous Integration tool
+
+Purpose: Automates the build, test, and deployment process.
+
+Workflow Role:
+
+Pulls code from GitHub on webhook trigger.
+
+Uses Maven to compile and build the Java project.
+
+Builds WAR/JAR files and either:
+
+Deploys directly to Tomcat.
+
+Builds Docker images and pushes them to Amazon ECR.
+
+Applies Kubernetes manifests to deploy containers in EKS.
+
+
+
+
+
+---
+
+☕ 4. Maven
+
+Tool Type: Java Build Automation Tool
+
+Purpose: Compiles, tests, and packages Java code into .war or .jar.
+
+Workflow Role:
+
+Jenkins uses Maven to:
+
+Download dependencies
+
+Compile code
+
+Package it into a deployable WAR file
+
+
+WAR file can be deployed to Tomcat or used in a Docker image
+
+
+
+
+---
+
+🐱 5. Tomcat Server
+
+Tool Type: Java Web Application Server
+
+Purpose: Hosts Java .war files as web apps.
+
+Workflow Role:
+
+Jenkins integrates with Tomcat using credentials and Tomcat URL.
+
+Automatically deploys the WAR file on Tomcat after successful build.
+
+Used in early deployment (non-containerized environment).
+
+
+
+
+---
+
+🐳 6. Docker
+
+Tool Type: Containerization Platform
+
+Purpose: Packages applications into containers.
+
+Workflow Role:
+
+Jenkins uses Dockerfile to build Docker images from WAR file.
+
+Images include app + environment (Tomcat base image + app).
+
+Docker host/container runs the packaged application.
+
+Jenkins uses SSH to connect with Docker server and execute Docker commands.
+
+
+
+
+---
+
+📦 7. Amazon ECR (Elastic Container Registry)
+
+Tool Type: Container Registry by AWS
+
+Purpose: Stores Docker images securely in the cloud.
+
+Workflow Role:
+
+Jenkins is configured to authenticate with ECR using AWS credentials.
+
+Docker pushes the newly built image to ECR.
+
+This ensures the latest image is always available for Kubernetes deployment.
+
+
+
+
+---
+
+☸️ 8. Kubernetes Server
+
+Tool Type: Container Orchestration
+
+Purpose: Deploys, scales, and manages containerized applications.
+
+Workflow Role:
+
+Jenkins executes kubectl commands to apply:
+
+Deployment.yaml (defines pod specs)
+
+Service.yaml (exposes pods to external network)
+
+
+After each build, Jenkins updates Kubernetes deployments using ECR image.
+
+
+
+
+---
+
+☁️ 9. Amazon EKS (Elastic Kubernetes Service)
+
+Tool Type: Managed Kubernetes Cluster by AWS
+
+Purpose: Provides scalable, secure, and managed Kubernetes environment.
+
+Workflow Role:
+
+Jenkins connects to EKS using kubectl + kubeconfig.
+
+Deployments on Kubernetes run in EKS.
+
+Pulls latest Docker image from Amazon ECR and runs as pods.
+
+Accessed via Service IP exposed from Kubernetes.
+
+
+
+
+---
+
+🧭 Process Flow (Step-by-Step Summary)
+
+Step	Activity	Tools Involved
+
+1	Developer writes code and pushes to GitHub	Developer Machine → GitHub
+2	GitHub triggers Jenkins via webhook	GitHub → Jenkins
+3	Jenkins pulls code and builds using Maven	Jenkins + Maven
+4	WAR file is deployed to Tomcat (optional stage)	Jenkins → Tomcat
+5	Docker image is built from WAR and pushed to ECR	Jenkins → Docker → Amazon ECR
+6	Jenkins applies deployment.yaml and service.yaml to Kubernetes	Jenkins → Kubernetes
+7	Kubernetes pulls Docker image from ECR and runs it as pods	Kubernetes → Amazon ECR
+8	Kubernetes exposes app via service (NodePort/LoadBalancer)	Kubernetes
+9	App is accessed using the K8s Service IP in browser	User
+
+
+
+---
+
+📁 Kubernetes Files
+
+Deployment.yaml: Defines app containers, replicas, image version, etc.
+
+Service.yaml: Defines how the app is exposed (e.g., LoadBalancer IP)
+
+
+
+---
+
+✅ Final Output:
+
+After everything is set up:
+
+Developer pushes code → Pipeline runs automatically
+
+App is built, containerized, and deployed to EKS
+
+Access app using Kubernetes Service IP in browser
+
+
+
+---
+
+Would you like:
+
+Sample Dockerfile, deployment.yaml, and Jenkinsfile?
+
+Folder structure for this CI/CD setup? Let me know — I can provide the complete code and config files.
+
+
