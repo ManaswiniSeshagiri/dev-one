@@ -12,14 +12,14 @@ Fetching upstream changes from https://github.com/ManaswiniSeshagiri/proj.git
 using GIT_ASKPASS to set credentials 
  > git fetch --tags --force --progress -- https://github.com/ManaswiniSeshagiri/proj.git +refs/heads/*:refs/remotes/origin/* # timeout=10
  > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
-Checking out Revision a3866bbc8ce46e4d39eac7e51061a4b661526ec1 (refs/remotes/origin/main)
+Checking out Revision 5bd81b5f2d1b27953ab43c903111471e561eb8fe (refs/remotes/origin/main)
  > git config core.sparsecheckout # timeout=10
- > git checkout -f a3866bbc8ce46e4d39eac7e51061a4b661526ec1 # timeout=10
+ > git checkout -f 5bd81b5f2d1b27953ab43c903111471e561eb8fe # timeout=10
 Commit message: "Update index.jsp"
- > git rev-list --no-walk a3866bbc8ce46e4d39eac7e51061a4b661526ec1 # timeout=10
+ > git rev-list --no-walk 5bd81b5f2d1b27953ab43c903111471e561eb8fe # timeout=10
 Parsing POMs
-Established TCP socket on 35011
-[proj] $ /usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/java -cp /var/lib/jenkins/plugins/maven-plugin/WEB-INF/lib/maven35-agent-1.14.jar:/usr/share/maven/boot/plexus-classworlds-2.6.0.jar:/usr/share/maven/conf/logging jenkins.maven3.agent.Maven35Main /usr/share/maven /var/cache/jenkins/war/WEB-INF/lib/remoting-3301.v4363ddcca_4e7.jar /var/lib/jenkins/plugins/maven-plugin/WEB-INF/lib/maven35-interceptor-1.14.jar /var/lib/jenkins/plugins/maven-plugin/WEB-INF/lib/maven3-interceptor-commons-1.14.jar 35011
+Established TCP socket on 33297
+[proj] $ /usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/java -cp /var/lib/jenkins/plugins/maven-plugin/WEB-INF/lib/maven35-agent-1.14.jar:/usr/share/maven/boot/plexus-classworlds-2.6.0.jar:/usr/share/maven/conf/logging jenkins.maven3.agent.Maven35Main /usr/share/maven /var/cache/jenkins/war/WEB-INF/lib/remoting-3301.v4363ddcca_4e7.jar /var/lib/jenkins/plugins/maven-plugin/WEB-INF/lib/maven35-interceptor-1.14.jar /var/lib/jenkins/plugins/maven-plugin/WEB-INF/lib/maven3-interceptor-commons-1.14.jar 33297
 <===[JENKINS REMOTING CAPACITY]===>channel started
 Executing Maven:  -B -f /var/lib/jenkins/workspace/proj/pom.xml install
 [INFO] Scanning for projects...
@@ -79,7 +79,7 @@ Executing Maven:  -B -f /var/lib/jenkins/workspace/proj/pom.xml install
  T E S T S
 -------------------------------------------------------
 Running com.example.TestGreeter
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.054 sec
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 sec
 
 Results :
 
@@ -140,16 +140,15 @@ Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
 [INFO] ------------------------------------------------------------------------
 [INFO] Reactor Summary for Maven Project 1.0-SNAPSHOT:
 [INFO] 
-[INFO] Maven Project ...................................... SUCCESS [  0.535 s]
-[INFO] Server ............................................. SUCCESS [  2.242 s]
-[INFO] Webapp ............................................. SUCCESS [  0.985 s]
+[INFO] Maven Project ...................................... SUCCESS [  0.586 s]
+[INFO] Server ............................................. SUCCESS [  2.546 s]
+[INFO] Webapp ............................................. SUCCESS [  1.041 s]
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  5.969 s
-[INFO] Finished at: 2025-06-28T08:53:42Z
+[INFO] Total time:  6.564 s
+[INFO] Finished at: 2025-06-30T07:17:44Z
 [INFO] ------------------------------------------------------------------------
-Waiting for Jenkins to finish collecting data
 [JENKINS] Archiving /var/lib/jenkins/workspace/proj/webapp/pom.xml to com.example.maven-project/webapp/1.0-SNAPSHOT/webapp-1.0-SNAPSHOT.pom
 [JENKINS] Archiving /var/lib/jenkins/workspace/proj/webapp/target/webapp.war to com.example.maven-project/webapp/1.0-SNAPSHOT/webapp-1.0-SNAPSHOT.war
 [JENKINS] Archiving /var/lib/jenkins/workspace/proj/server/pom.xml to com.example.maven-project/server/1.0-SNAPSHOT/server-1.0-SNAPSHOT.pom
@@ -163,13 +162,8 @@ channel stopped
   Deploying [/var/lib/jenkins/workspace/proj/webapp/target/webapp.war]
 SSH: Connecting from host [jenkins.example.com]
 SSH: Connecting with configuration [jenkins] ...
-SSH: EXEC: completed after 802 ms
+SSH: EXEC: completed after 205 ms
 SSH: Disconnecting configuration [jenkins] ...
-SSH: Transferred 0 file(s)
-SSH: Connecting from host [jenkins.example.com]
-SSH: Connecting with configuration [docker] ...
-SSH: EXEC: completed after 1,201 ms
-SSH: Disconnecting configuration [docker] ...
-ERROR: Exception when publishing, exception message [Exec exit status not zero. Status [1]]
+ERROR: Exception when publishing, exception message [Exec exit status not zero. Status [12]]
 Build step 'Send build artifacts over SSH' changed build result to UNSTABLE
 Finished: UNSTABLE
