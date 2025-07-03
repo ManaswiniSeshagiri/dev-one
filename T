@@ -1,0 +1,86 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
+# Security Group for Web Server (Inline Rules Only)
+resource "aws_security_group" "webserver_access" {
+  name        = "webserver_access"
+  description = "Allow HTTP, HTTPS, and SSH access"
+  vpc_id      = "vpc-0c000aa8d5fddf3c3"  # Replace with your actual VPC ID
+
+  ingress {
+    description = "Allow HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "webserver_access"
+  }
+}
+
+# EC2 Instance
+resource "aws_instance" "ourfirst" {
+  ami               = "ami-05ffe3c48a9991133" # Use latest verified AMI
+  availability_zone = "us-east-1a"
+  instance_type     = "t2.micro"
+  key_name          = "testkey" # Replace with your key pair name
+
+  # Attach the security group
+  vpc_security_group_ids = [aws_security_group.webserver_access.id]
+
+  # Root disk
+  root_block_device {
+    volume_size           = 26
+    volume_type           = "gp2"
+    delete_on_termination = true
+  }
+
+  # Additional data disk
+  ebs_block_device {
+    device_name           = "/dev/xvdb"
+    volume_size           = 25
+    volume_type           = "gp2"
+    delete_on_termination = true
+  }
+
+  user_data = <<-EOF
+    #!/bin/bash
+    sudo yum install httpd -y
+    sudo systemctl start httpd
+    sudo systemctl enable httpd
+    echo "<h1>sample webserver using terraform</h1>" > /var/www/html/index.html
+  EOF
+
+  tags = {
+    Name     = "hello-India"
+    Stage    = "testing"
+    Location = "India"
+  }
+}
