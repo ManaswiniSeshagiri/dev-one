@@ -1,94 +1,24 @@
-resource "aws_security_group" "web_access" {
-  name        = "web_access"
-  description = "Allow traffic"
-
-  tags = {
-    Name = "web_access"
-  }
-}
-
-resource "aws_vpc_security_group_ingress_rule" "allow_http" {
-  security_group_id = aws_security_group.web_access.id
-  cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 80
-  ip_protocol       = "tcp"
-  to_port           = 80
-}
-
-resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
-  security_group_id = aws_security_group.web_access.id
-  cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 22
-  ip_protocol       = "tcp"
-  to_port           = 22
-}
-
-resource "aws_vpc_security_group_ingress_rule" "allow_https" {
-  security_group_id = aws_security_group.web_access.id
-  cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 443
-  ip_protocol       = "tcp"
-  to_port           = 443
-}
-resource "aws_vpc_security_group_egress_rule" "allow_all_taraffic" {
-  security_group_id = aws_security_group.web_access.id
-  cidr_ipv4         = "0.0.0.0/0"
-  ip_protocol       = "-1"
-}
-provider "aws" {
-  region = "us-east-1"
-}
-
-#security group
-resource "aws_security_group" "webserver_access" {
-  name        = "webserver_access"
-  description = "allow ssh and http"
-  vpc_id      = "vpc-0c000aa8d5fddf3c3"
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-
-}
-#security group end here
-
+this is my ec2.tf
 resource "aws_instance" "ourfirst" {
   ami               = "ami-05ffe3c48a9991133"
   availability_zone = "us-east-1a"
   instance_type     = "t2.micro"
   security_groups   = ["${aws_security_group.webserver_access.name}"]
-  key_name          = "testkey"
-  #root disk
+  key_name          = "lti-mahape"
+
+
   root_block_device {
     volume_size           = "26"
     volume_type           = "gp2"
     delete_on_termination = true
   }
 
-  #additional data disk
   ebs_block_device {
     device_name           = "/dev/xvdb"
-    volume_size           = "25"
+    volume_size           = "10"
     volume_type           = "gp2"
     delete_on_termination = true
- }
+  }
 
   user_data = <<-EOF
         #!/bin/bash
@@ -104,192 +34,15 @@ resource "aws_instance" "ourfirst" {
     Location = "India"
   }
 
+
 }
-
-[root@terraform proj]# terraform plan
-aws_security_group.web_access: Refreshing state... [id=sg-071d246cdf8a6df41]
-aws_security_group.webserver_access: Refreshing state... [id=sg-0ae4d7cf503a2cceb]
-aws_vpc_security_group_egress_rule.allow_all_taraffic: Refreshing state... [id=sgr-01b1062acfe5dd303]
-aws_vpc_security_group_ingress_rule.allow_http: Refreshing state... [id=sgr-08cefb9e62a2a219b]
-aws_vpc_security_group_ingress_rule.allow_ssh: Refreshing state... [id=sgr-0dc58617ccd0ac43a]
-aws_vpc_security_group_ingress_rule.allow_https: Refreshing state... [id=sgr-01ea2919deb94d4c3]
-
-Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
-symbols:
-  + create
-
-Terraform planned the following actions, but then encountered a problem:
-
-  # aws_instance.ourfirst will be created
-  + resource "aws_instance" "ourfirst" {
-      + ami                                  = "ami-05ffe3c48a9991133"
-      + arn                                  = (known after apply)
-      + associate_public_ip_address          = (known after apply)
-      + availability_zone                    = "us-east-1a"
-      + disable_api_stop                     = (known after apply)
-      + disable_api_termination              = (known after apply)
-      + ebs_optimized                        = (known after apply)
-      + enable_primary_ipv6                  = (known after apply)
-      + get_password_data                    = false
-      + host_id                              = (known after apply)
-      + host_resource_group_arn              = (known after apply)
-      + iam_instance_profile                 = (known after apply)
-      + id                                   = (known after apply)
-      + instance_initiated_shutdown_behavior = (known after apply)
-      + instance_lifecycle                   = (known after apply)
-      + instance_state                       = (known after apply)
-      + instance_type                        = "t2.micro"
-      + ipv6_address_count                   = (known after apply)
-      + ipv6_addresses                       = (known after apply)
-      + key_name                             = "lti-mahape"
-      + monitoring                           = (known after apply)
-      + outpost_arn                          = (known after apply)
-      + password_data                        = (known after apply)
-      + placement_group                      = (known after apply)
-      + placement_partition_number           = (known after apply)
-      + primary_network_interface_id         = (known after apply)
-      + private_dns                          = (known after apply)
-      + private_ip                           = (known after apply)
-      + public_dns                           = (known after apply)
-      + public_ip                            = (known after apply)
-      + region                               = "us-east-1"
-      + secondary_private_ips                = (known after apply)
-      + security_groups                      = [
-          + "webserver_access",
-        ]
-      + source_dest_check                    = true
-      + spot_instance_request_id             = (known after apply)
-      + subnet_id                            = (known after apply)
-      + tags                                 = {
-          + "Location" = "India"
-          + "Name"     = "hello-India"
-          + "Stage"    = "testing"
-        }
-      + tags_all                             = {
-          + "Location" = "India"
-          + "Name"     = "hello-India"
-          + "Stage"    = "testing"
-        }
-      + tenancy                              = (known after apply)
-      + user_data                            = <<-EOT
-            #!/bin/bash
-            sudo yum install httpd -y
-            sudo systemctl start httpd
-            sudo systemctl enable httpd
-            echo "<h1>sample webserver using terraform</h1>" | sudo tee /var/www/html/index.html
-        EOT
-      + user_data_base64                     = (known after apply)
-      + user_data_replace_on_change          = false
-      + vpc_security_group_ids               = (known after apply)
-
-      + capacity_reservation_specification (known after apply)
-
-      + cpu_options (known after apply)
-
-      + ebs_block_device {
-          + delete_on_termination = true
-          + device_name           = "/dev/xvdb"
-          + encrypted             = (known after apply)
-          + iops                  = (known after apply)
-          + kms_key_id            = (known after apply)
-          + snapshot_id           = (known after apply)
-          + tags_all              = (known after apply)
-          + throughput            = (known after apply)
-          + volume_id             = (known after apply)
-          + volume_size           = 25
-          + volume_type           = "gp2"
-        }
-
-      + enclave_options (known after apply)
-
-      + ephemeral_block_device (known after apply)
-
-      + instance_market_options (known after apply)
-
-      + maintenance_options (known after apply)
-
-      + metadata_options (known after apply)
-
-      + network_interface (known after apply)
-
-      + private_dns_name_options (known after apply)
-
-      + root_block_device {
-          + delete_on_termination = true
-          + device_name           = (known after apply)
-          + encrypted             = (known after apply)
-          + iops                  = (known after apply)
-          + kms_key_id            = (known after apply)
-          + tags_all              = (known after apply)
-          + throughput            = (known after apply)
-          + volume_id             = (known after apply)
-          + volume_size           = 26
-          + volume_type           = "gp2"
-        }
-    }
-
-  # aws_security_group.web_access will be created
-  + resource "aws_security_group" "web_access" {
-      + arn                    = (known after apply)
-      + description            = "Allow traffic"
-      + egress                 = (known after apply)
-      + id                     = (known after apply)
-      + ingress                = (known after apply)
-      + name                   = "web_access"
-      + name_prefix            = (known after apply)
-      + owner_id               = (known after apply)
-      + region                 = "us-east-1"
-      + revoke_rules_on_delete = false
-      + tags                   = {
-          + "Name" = "web_access"
-        }
-      + tags_all               = {
-          + "Name" = "web_access"
-        }
-      + vpc_id                 = (known after apply)
-    }
-
-Plan: 2 to add, 0 to change, 0 to destroy.
+all the commands init, fmt, validate, and plan is working. but its showing error while apply
+aws_instance.ourfirst: Creating...
 ╷
-│ Warning: AWS resource not found during refresh
+│ Error: creating EC2 Instance: operation error EC2: RunInstances, https response error StatusCode: 400, RequestID: 26ce345a-674e-4d51-ae7f-e696857ad93e, api error InvalidInput: No default subnet for availability zone: 'us-east-1a'.
 │
-│   with aws_vpc_security_group_ingress_rule.allow_http,
-│   on resource.tf line 10, in resource "aws_vpc_security_group_ingress_rule" "allow_http":
-│   10: resource "aws_vpc_security_group_ingress_rule" "allow_http" {
+│   with aws_instance.ourfirst,
+│   on ec2.tf line 1, in resource "aws_instance" "ourfirst":
+│    1: resource "aws_instance" "ourfirst" {
 │
-│ Automatically removing from Terraform State instead of returning the error, which may trigger resource recreation. Original error:
-│ couldn't find resource
-│
-│ (and 3 more similar warnings elsewhere)
 ╵
-╷
-│ Error: Provider produced invalid plan
-│
-│ Provider "registry.terraform.io/hashicorp/aws" has indicated "requires replacement" on
-│ aws_vpc_security_group_ingress_rule.allow_ssh for a non-existent attribute path cty.Path{cty.GetAttrStep{Name:""}}.
-│
-│ This is a bug in the provider, which should be reported in the provider's own issue tracker.
-╵
-╷
-│ Error: Provider produced invalid plan
-│
-│ Provider "registry.terraform.io/hashicorp/aws" has indicated "requires replacement" on
-│ aws_vpc_security_group_ingress_rule.allow_https for a non-existent attribute path cty.Path{cty.GetAttrStep{Name:""}}.
-│
-│ This is a bug in the provider, which should be reported in the provider's own issue tracker.
-╵
-╷
-│ Error: Provider produced invalid plan
-│
-│ Provider "registry.terraform.io/hashicorp/aws" has indicated "requires replacement" on
-│ aws_vpc_security_group_ingress_rule.allow_http for a non-existent attribute path cty.Path{cty.GetAttrStep{Name:""}}.
-│
-│ This is a bug in the provider, which should be reported in the provider's own issue tracker.
-╵
-╷
-│ Error: Provider produced invalid plan
-│
-│ Provider "registry.terraform.io/hashicorp/aws" has indicated "requires replacement" on
-│ aws_vpc_security_group_egress_rule.allow_all_taraffic for a non-existent attribute path cty.Path{cty.GetAttrStep{Name:""}}.
-│
-│ This is a bug in the provider, which should be reported in the provider's own issue tracker.
