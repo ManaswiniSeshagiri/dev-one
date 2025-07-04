@@ -1,0 +1,113 @@
+resource "aws_eks_cluster" "eks_cluster" {
+  name     = "my-eks-cluster"
+  role_arn = aws_iam_role.eks_role.arn
+  vpc_config {
+    subnet_ids         = aws_subnet.private_eks_subnet[*].id
+    security_group_ids = [aws_security_group.eks_cluster_sg.id]
+  }
+  depends_on = [aws_iam_role_policy_attachment.eks_policy]
+}
+
+resource "aws_eks_node_group" "eks_node_group" {
+  cluster_name    = aws_eks_cluster.eks_cluster.name
+  node_group_name = "my-node-group"
+  node_role_arn   = aws_iam_role.eks_node_group_role.arn
+  subnet_ids      = aws_subnet.private_eks_subnet[*].id
+  scaling_config {
+    desired_size = 1
+    max_size     = 2
+    min_size     = 1
+  }
+
+  instance_types = ["t2.medium"]
+  remote_access {
+    ec2_ssh_key = "lti-mahape" # Replace with your key pair name
+  }
+
+  update_config {
+    max_unavailable = 1
+  }
+
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_node_group_policy,
+    aws_iam_role_policy_attachment.eks_cni_policy,
+    aws_iam_role_policy_attachment.eks_ecr_policy
+  ]
+
+}
+
+data "aws_eks_cluster" "eks_cluster" {
+  name = aws_eks_cluster.eks_cluster.name
+}
+
+data "aws_eks_cluster_auth" "eks_cluster" {
+  name = aws_eks_cluster.eks_cluster.name
+}
+
+
+error is
+╷
+│ Error: Reference to undeclared resource
+│
+│   on k8s-3.tf line 3, in resource "aws_eks_cluster" "eks_cluster":
+│    3:   role_arn = aws_iam_role.eks_role.arn
+│
+│ A managed resource "aws_iam_role" "eks_role" has not been declared in the root module.
+╵
+╷
+│ Error: Reference to undeclared resource
+│
+│   on k8s-3.tf line 5, in resource "aws_eks_cluster" "eks_cluster":
+│    5:     subnet_ids         = aws_subnet.private_eks_subnet[*].id
+│
+│ A managed resource "aws_subnet" "private_eks_subnet" has not been declared in the root module.
+╵
+╷
+│ Error: Reference to undeclared resource
+│
+│   on k8s-3.tf line 6, in resource "aws_eks_cluster" "eks_cluster":
+│    6:     security_group_ids = [aws_security_group.eks_cluster_sg.id]
+│
+│ A managed resource "aws_security_group" "eks_cluster_sg" has not been declared in the root module.
+╵
+╷
+│ Error: Reference to undeclared resource
+│
+│   on k8s-3.tf line 8, in resource "aws_eks_cluster" "eks_cluster":
+│    8:   depends_on = [aws_iam_role_policy_attachment.eks_policy]
+│
+│ A managed resource "aws_iam_role_policy_attachment" "eks_policy" has not been declared in the root module.
+╵
+[root@tks k8s-3]# vim k8s-3.tf
+[root@tks k8s-3]# terraform validate
+╷
+│ Error: Reference to undeclared resource
+│
+│   on k8s-3.tf line 3, in resource "aws_eks_cluster" "eks_cluster":
+│    3:   role_arn = aws_iam_role.eks_role.arn
+│
+│ A managed resource "aws_iam_role" "eks_role" has not been declared in the root module.
+╵
+╷
+│ Error: Reference to undeclared resource
+│
+│   on k8s-3.tf line 5, in resource "aws_eks_cluster" "eks_cluster":
+│    5:     subnet_ids         = aws_subnet.private_eks_subnet[*].id
+│
+│ A managed resource "aws_subnet" "private_eks_subnet" has not been declared in the root module.
+╵
+╷
+│ Error: Reference to undeclared resource
+│
+│   on k8s-3.tf line 6, in resource "aws_eks_cluster" "eks_cluster":
+│    6:     security_group_ids = [aws_security_group.eks_cluster_sg.id]
+│
+│ A managed resource "aws_security_group" "eks_cluster_sg" has not been declared in the root module.
+╵
+╷
+│ Error: Reference to undeclared resource
+│
+│   on k8s-3.tf line 8, in resource "aws_eks_cluster" "eks_cluster":
+│    8:   depends_on = [aws_iam_role_policy_attachment.eks_policy]
+│
+│ A managed resource "aws_iam_role_policy_attachment" "eks_policy" has not been declared in the root module.
